@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Gambia B2B Procurement OS — Lean Launch</title>
+<style>
+:root{color-scheme:light dark;--bg:#0f172a;--card:#ffffff;--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;--acc:#0ea5e9;--ok:#16a34a;--warn:#f59e0b;--bad:#ef4444}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f1f5f9;color:#0f172a}
+header{background:var(--bg);color:#fff;padding:16px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:20px}header p{margin:4px 0 0;color:#cbd5e1;font-size:13px}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:73px;z-index:4}
+nav button{white-space:nowrap;border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:14px}
+nav button.active{background:var(--bg);color:#fff;border-color:var(--bg)}
+main{max-width:1020px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:1fr 1fr}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:760px){.g2,.g4{grid-template-columns:1fr}nav{top:97px}}
+.kpi{border:1px solid var(--line);border-radius:12px;padding:12px;background:#f8fafc}.kpi b{font-size:22px;display:block}.kpi span{color:var(--mut);font-size:12px}
+label{font-size:13px;color:var(--mut);display:block;margin:8px 0 4px}input,select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fff;color:#0f172a}
+textarea{min-height:70px}button.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px}button.ghost{background:#f1f5f9;color:#0f172a;border:1px solid var(--line)}button.small{padding:6px 10px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}
+.badge{display:inline-block;padding:3px 9px;border-radius:999px;font-size:12px;background:#e0f2fe}.b-ok{background:#dcfce7}.b-warn{background:#fef3c7}.b-bad{background:#fee2e2}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.mut{color:var(--mut);font-size:13px}.mono{font-family:ui-monospace,Menlo,monospace;font-size:13px}
+pre{white-space:pre-wrap;background:#0f172a;color:#e2e8f0;border-radius:12px;padding:12px;font-size:13px}
+footer{padding:24px;text-align:center;color:var(--mut);font-size:13px}
+.agent{border-left:4px solid var(--acc);padding-left:12px;margin:12px 0}
+.check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--line)}
+@media print{header,nav,footer,.noprint{display:none}main{max-width:100%}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+<h1>🇬🇲 B2B Procurement OS — Lean GMD 5,000 Launch</h1>
+<p>Quotes • Orders • Suppliers • Deliveries • AI helpers — 100% offline, no server, data stays on your phone.</p>
+</header>
+<nav id="tabs" class="noprint">
+<button data-t="dash" class="active">📊 Dashboard</button>
+<button data-t="quote">🧾 Quote</button>
+<button data-t="orders">📦 Orders</button>
+<button data-t="sup">🏭 Suppliers</button>
+<button data-t="cus">🏪 Customers</button>
+<button data-t="del">🛵 Deliveries</button>
+<button data-t="agents">🤖 AI Agents</button>
+<button data-t="phone">📲 Phone</button>
+<button data-t="setup">🧰 Setup & Capital</button>
+</nav>
+<main>
+<!-- DASHBOARD -->
+<section id="v-dash">
+<div class="card"><h2 style="margin:0">Today</h2><p class="mut">Goal: 10 profitable documented orders. Collect 70–100% deposit before buying.</p>
+<div class="grid g4" id="kpis"></div></div>
+<div class="grid g2">
+<div class="card"><h3>Next actions (auto)</h3><div id="nextActions"></div></div>
+<div class="card"><h3>Top products (auto)</h3><div id="topProducts"></div><div class="row noprint"><button class="btn small" onclick="exportJSON()">⬇ Export backup</button><button class="ghost small" onclick="document.getElementById('imp').click()">⬆ Import</button><input type="file" id="imp" hidden accept=".json" onchange="importJSON(event)"/><button class="ghost small" onclick="wipe()">Reset demo</button></div></div>
+</div>
+</section>
+
+<!-- QUOTE -->
+<section id="v-quote" hidden>
+<div class="card"><h2 style="margin:0">Quotation builder</h2><p class="mut">Price = supplier cost + service fee + delivery. Send via WhatsApp.</p>
+<label>Customer</label><select id="q_cus"></select>
+<label>Supplier (for cost reference)</label><select id="q_sup"></select>
+<div id="q_lines"></div>
+<div class="row noprint"><button class="ghost small" onclick="addQLine()">+ Add item</button>
+<button class="ghost small" onclick="autoPrice()">🤖 Auto-price from supplier book</button></div>
+<div class="grid g2">
+<div><label>Service fee (GMD)</label><input id="q_fee" type="number" value="150"/></div>
+<div><label>Delivery fee (GMD)</label><input id="q_del" type="number" value="100"/></div>
+</div>
+<label>Deposit required %</label><input id="q_dep" type="number" value="100"/>
+<div class="row" style="margin-top:10px"><button class="btn" onclick="genQuote()">Generate quote</button>
+<button class="ghost" onclick="saveQuoteAsOrder()">Save as order</button></div>
+<pre id="q_out">Quote preview appears here…</pre>
+<div class="row noprint"><button class="ghost small" onclick="copyQuote()">Copy text</button><a id="q_wa" target="_blank" rel="noopener"><button class="btn small">Send via WhatsApp</button></a><button class="ghost small" onclick="window.print()">Print / PDF</button></div>
+</div>
+</section>
+
+<!-- ORDERS -->
+<section id="v-orders" hidden>
+<div class="card"><h2 style="margin:0">Orders</h2><p class="mut">Record purchase price, delivery cost, cash received, profit for every order.</p>
+<div class="row noprint"><select id="f_status" onchange="renderOrders()"><option value="">All status</option><option>Quoted</option><option>Deposit paid</option><option>Purchased</option><option>Delivered</option><option>Paid</option><option>Cancelled</option></select>
+<button class="ghost small" onclick="exportCSV()">Export CSV</button></div>
+<div style="overflow:auto"><table><thead><tr><th>ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Paid</th><th>Profit</th><th>Status</th><th class="noprint">Action</th></tr></thead><tbody id="o_body"></tbody></table></div></div>
+</section>
+
+<!-- SUPPLIERS -->
+<section id="v-sup" hidden>
+<div class="card"><h2 style="margin:0">Suppliers — 5 to start</h2><p class="mut">Beverages, water, rice/oil, cleaning/tissue, eggs/perishables.</p>
+<div class="grid g2">
+<div><label>Name</label><input id="s_name" placeholder="e.g. Kanifing Wholesalers"/></div>
+<div><label>Phone / WhatsApp</label><input id="s_phone" placeholder="220..."/></div>
+</div>
+<div class="grid g2"><div><label>Product</label><input id="s_prod" placeholder="e.g. 20L water box"/></div>
+<div><label>Price GMD</label><input id="s_price" type="number" placeholder="0"/></div></div>
+<label>Terms (cash / 7-day credit / sale-or-return)</label><input id="s_terms" placeholder="Cash, delivery available"/>
+<button class="btn" onclick="addSupplier()">Add supplier / price</button>
+<div style="overflow:auto;margin-top:10px"><table><thead><tr><th>Supplier</th><th>Product</th><th>Price</th><th>Terms</th><th class="noprint"></th></tr></thead><tbody id="s_body"></tbody></table></div></div>
+</section>
+
+<!-- CUSTOMERS -->
+<section id="v-cus" hidden>
+<div class="card"><h2 style="margin:0">Customers</h2><p class="mut">Restaurants, juice bars, offices, shops, salons, guesthouses, events.</p>
+<div class="grid g2"><div><label>Business name</label><input id="c_name"/></div><div><label>Type</label><select id="c_type"><option>Restaurant</option><option>Juice bar</option><option>Office</option><option>Shop</option><option>Guesthouse/Hotel</option><option>Salon</option><option>Event</option><option>Other</option></select></div></div>
+<div class="grid g2"><div><label>Contact / WhatsApp</label><input id="c_phone"/></div><div><label>Location</label><input id="c_loc" placeholder="e.g. Bakau"/></div></div>
+<button class="btn" onclick="addCustomer()">Add customer</button>
+<div style="overflow:auto;margin-top:10px"><table><thead><tr><th>Name</th><th>Type</th><th>Contact</th><th>Location</th><th class="noprint"></th></tr></thead><tbody id="c_body"></tbody></table></div></div>
+</section>
+
+<!-- DELIVERIES -->
+<section id="v-del" hidden>
+<div class="card"><h2 style="margin:0">Deliveries — no vehicle yet</h2><p class="mut">Use rider / taxi / van owner / supplier delivery. Never buy a bike before repeat orders.</p>
+<label>Order</label><select id="d_order"></select>
+<div class="grid g2"><div><label>Rider / driver + phone</label><input id="d_rider" placeholder="e.g. Lamin 3xx — Bakau"/></div><div><label>Delivery cost GMD</label><input id="d_cost" type="number" value="150"/></div></div>
+<label>Note</label><input id="d_note" placeholder="e.g. pickup 10am, deliver before lunch"/>
+<button class="btn" onclick="addDelivery()">Assign delivery</button>
+<div style="overflow:auto;margin-top:10px"><table><thead><tr><th>Order</th><th>Rider</th><th>Cost</th><th>Note</th><th class="noprint"></th></tr></thead><tbody id="d_body"></tbody></table></div></div>
+</section>
+
+<!-- AGENTS -->
+<section id="v-agents" hidden>
+<div class="card"><h2 style="margin:0">🤖 AI Agents — reduce online tasks</h2>
+<p class="mut">Rule-based offline helpers. They read your orders/suppliers and draft messages, so you spend less time typing online. No internet needed. Optional: connect an LLM key later.</p>
+<div class="agent"><h3>1. 💰 Quote Agent — auto-margin</h3><p class="mut">Suggests sell price = cost + 12% (restaurant) / 15% (small shop) + share of fee. Cuts price-check chats.</p><div class="row"><button class="btn small" onclick="agentQuote()">Run</button></div><pre id="a1">…</pre></div>
+<div class="agent"><h3>2. 📲 Follow-up Agent — pending money</h3><p class="mut">Finds Quoted / Deposit-paid / Delivered-unpaid and drafts short WhatsApp nudges.</p><div class="row"><button class="btn small" onclick="agentFollow()">Run</button><button class="ghost small" onclick="copyText('a2')">Copy</button></div><pre id="a2">…</pre></div>
+<div class="agent"><h3>3. 📉 Price-Watch Agent</h3><p class="mut">Groups same product across suppliers, flags cheapest. Use before buying.</p><div class="row"><button class="btn small" onclick="agentPrice()">Run</button></div><pre id="a3">…</pre></div>
+<div class="agent"><h3>4. 🔁 Reorder Agent</h3><p class="mut">Counts what sells most → what test-stock to hold with your GMD 1,000 sample budget.</p><div class="row"><button class="btn small" onclick="agentReorder()">Run</button></div><pre id="a4">…</pre></div>
+<div class="agent"><h3>5. 📣 Marketing Agent — Status / flyer text</h3><p class="mut">Drafts 3 WhatsApp Status posts + 1 flyer line from your top items. Copy-paste, no designer needed.</p><div class="row"><button class="btn small" onclick="agentMarket()">Run</button><button class="ghost small" onclick="copyText('a5')">Copy</button></div><pre id="a5">…</pre></div>
+</div>
+</section>
+
+<!-- PHONE -->
+<section id="v-phone" hidden>
+<div class="card"><h2 style="margin:0">📲 Phone bridge — MacroDroid + Shizuku + WhatsApp</h2>
+<p class="mut">This site can't reach your phone directly. It <b>triggers</b> your phone via MacroDroid cloud webhook: <span class="mono">https://trigger.macrodroid.com/[device-id]/[macro]</span>. Your phone then auto-sends WhatsApp / SMS / runs Shizuku shell. Needs internet + Play Services on phone.</p>
+<div class="grid g2">
+<div><label>Webhook base URL (from MacroDroid → Triggers → Webhook → copy)</label><input id="md_base" placeholder="https://trigger.macrodroid.com/xxxxxxxx-xxxx-.../" onchange="savePhone()"/></div>
+<div><label>Default customer phone (220…)</label><input id="md_to" placeholder="2203xxxxxx" onchange="savePhone()"/></div>
+</div>
+<div class="grid g2">
+<div><label>Macro ID: send WhatsApp</label><input id="md_wa" value="wa_send" onchange="savePhone()"/></div>
+<div><label>Macro ID: follow-up</label><input id="md_fo" value="followup" onchange="savePhone()"/></div>
+</div>
+<div><label>Macro ID: delivery alert</label><input id="md_dl" value="delivery" onchange="savePhone()"/></div>
+<div class="row" style="margin-top:10px">
+<button class="btn small" onclick="mdTest()">Test connection</button>
+<button class="ghost small" onclick="mdSendQuote()">Send current quote → phone → WhatsApp</button>
+<button class="ghost small" onclick="mdSendFollowups()">Send follow-ups → phone</button>
+</div>
+<pre id="md_log">Phone log appears here…</pre>
+<details><summary><b>Setup on phone (5 min) — tap to open</b></summary>
+<p class="mut"><b>A. MacroDroid webhook:</b> Install MacroDroid → Add Macro → Trigger: Webhook (URL) → Identifier: <span class="mono">wa_send</span> → copy base URL above. Action: UI Interaction → WhatsApp → send <span class="mono">{lv=message}</span> to <span class="mono">{lv=to}</span>. Or simpler: Action: Open URL <span class="mono">https://wa.me/{lv=to}?text={lv=message}</span> + UI click Send. Add 2nd macro <span class="mono">followup</span> + 3rd <span class="mono">delivery</span> same way.<br/><br/>
+<b>B. Params:</b> Webhook query <span class="mono">?to=220…&message=hello</span> auto-creates variables <span class="mono">[lv=to]</span>, <span class="mono">[lv=message]</span>. Limit 3800 chars. Device needs internet.<br/><br/>
+<b>C. Shizuku (no root, for power):</b> Install Shizuku (shizuku.rikka.app) → start via Wireless Debugging → in Shizuku authorize MacroDroid → in MacroDroid use Constraint: Shizuku State = Running before shell actions. Re-start Shizuku after every reboot. Use for: auto-start Shizuku on WiFi, silent SMS, shell toggles.<br/><br/>
+<b>D. WhatsApp warning:</b> MacroDroid uses UI automation, NOT official API. Use WhatsApp Business, only message customers who ordered / opted-in, max ~30-50/day manual pace, keep human delay 5-10s. Spam = ban. For scale later use WhatsApp Cloud API instead.</p>
+</details>
+</div>
+</section>
+
+<!-- SETUP -->
+<section id="v-setup" hidden>
+<div class="card"><h2 style="margin:0">🧰 Services & tools to start (lean)</h2>
+<div id="setupList"></div>
+<p class="mut">Tick = saved on this device. Official fees: name reservation GMD 500, business registration GMD 1,000. Confirm TIN + municipal licence locally. Sources: moj.gm, giepa.gm.</p></div>
+<div class="card"><h3>GMD 5,000 launch budget tracker</h3>
+<div class="grid g2"><div><label>Data/calls (500)</label><input type="number" id="b0" onchange="saveBudget()"/></div><div><label>Transport (1000)</label><input type="number" id="b1" onchange="saveBudget()"/></div><div><label>Delivery float (1000)</label><input type="number" id="b2" onchange="saveBudget()"/></div><div><label>Marketing (500)</label><input type="number" id="b3" onchange="saveBudget()"/></div><div><label>Samples/test stock (1000)</label><input type="number" id="b4" onchange="saveBudget()"/></div><div><label>Error buffer (1000)</label><input type="number" id="b5" onchange="saveBudget()"/></div></div>
+<p id="b_sum" class="mono"></p></div>
+</section>
+</main>
+<footer>Offline-first • localStorage • GMD • Built for low-data WhatsApp selling in The Gambia</footer>
+<script>
+const K='gambia_procure_v1';
+const SETUP=[
+['WhatsApp Business app + catalogue (15–30 items)','Free, Day 1. Separate business number.'],
+['Mobile money: Wave / Orange Money + bank transfer','Free. Needed to receive deposits fast.'],
+['Supplier list: 5 visited + price photos','Transport ~GMD 1,000. Cash terms first.'],
+['Quotation + invoice template (this app)','Free here. Print only when paid order.'],
+['Rider/taxi contacts: 3 reliable','No vehicle purchase. Pay per delivery.'],
+['Business name reservation GMD 500','moj.gm / Single Window. Do before branding.'],
+['Business registration GMD 1,000','Sole proprietor first. Company later (GMD 10k+).'],
+['TIN + municipal trade licence','Confirm at GRA + council. Allow small buffer.'],
+['Simple logo + flyer (Canva free)','≤GMD 500 printing. Status > paid ads.'],
+['GSCC advisory / training check','gscc.gm — free advice, sometimes grants. Never assume grant.']
+];
+let DB=null;
+function seed(){return {customers:[{name:'Demo Juice Bar',type:'Juice bar',phone:'2203000001',loc:'Bakau'},{name:'Demo Guesthouse',type:'Guesthouse/Hotel',phone:'2203000002',loc:'Kololi'}],
+suppliers:[{name:'Kanifing Wholesalers',phone:'2204000001',product:'Bottled water carton',price:350,terms:'Cash, delivery available'},{name:'Serrekunda Foods',phone:'2204000002',product:'Rice 50kg',price:2450,terms:'Cash'},{name:'Bakau Cleaning Supply',phone:'2204000003',product:'Tissue box (12)',price:420,terms:'7-day credit after 3 cash orders'}],
+orders:[{id:'Q-1001',customer:'Demo Juice Bar',items:[{p:'Bottled water carton',q:5,c:350,s:395}],fee:150,del:100,paid:0,status:'Quoted',ts:Date.now()}],
+deliveries:[],checks:Array(SETUP.length).fill(false),budget:[500,1000,1000,500,1000,1000],lastQuote:'',phone:{base:'',to:'',wa:'wa_send',fo:'followup',dl:'delivery'}};}
+function load(){try{DB=JSON.parse(localStorage.getItem(K))||seed();}catch{DB=seed();} if(!DB.budget)DB.budget=[500,1000,1000,500,1000,1000]; if(!DB.phone)DB.phone={base:'',to:'',wa:'wa_send',fo:'followup',dl:'delivery'}; save();}
+function save(){localStorage.setItem(K,JSON.stringify(DB));}
+const fmt=n=>'GMD '+Number(n||0).toLocaleString();
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// tabs
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');['dash','quote','orders','sup','cus','del','agents','phone','setup'].forEach(t=>document.getElementById('v-'+t).hidden=(t!==b.dataset.t));});
+// quote lines
+function addQLine(p='',q=1,c=0,s=0){const d=document.createElement('div');d.className='grid g2 qline';d.style.border='1px solid #e2e8f0';d.style.borderRadius='10px';d.style.padding='8px';d.style.margin='8px 0';
+d.innerHTML=`<div><label>Product</label><input class="qp" value="${esc(p)}" placeholder="e.g. Rice 50kg"/></div><div class="grid g2" style="grid-template-columns:1fr 1fr 1fr"><div><label>Qty</label><input class="qq" type="number" value="${q}"/></div><div><label>Cost</label><input class="qc" type="number" value="${c}"/></div><div><label>Sell</label><input class="qs" type="number" value="${s}"/></div></div>`;
+document.getElementById('q_lines').appendChild(d);}
+function qLines(){return [...document.querySelectorAll('.qline')].map(d=>({p:d.querySelector('.qp').value||'Item',q:+d.querySelector('.qq').value||1,c:+d.querySelector('.qc').value||0,s:+d.querySelector('.qs').value||0}));}
+function autoPrice(){const sup=DB.suppliers;document.querySelectorAll('.qline').forEach(d=>{const name=d.querySelector('.qp').value.toLowerCase();const m=sup.find(x=>x.product.toLowerCase().includes(name.split(' ')[0])||name.includes(x.product.toLowerCase().split(' ')[0]));if(m){d.querySelector('.qc').value=m.price;const cus=document.getElementById('q_cus').value;const r=cus.includes('Shop')?0.15:0.12;d.querySelector('.qs').value=Math.round(m.price*(1+r));}});toast('Auto-priced from supplier book');}
+function totals(){const L=qLines();const fee=+document.getElementById('q_fee').value||0;const del=+document.getElementById('q_del').value||0;const sub=L.reduce((a,l)=>a+l.q*l.s,0);const cost=L.reduce((a,l)=>a+l.q*l.c,0);return{L,fee,del,sub,total:sub+fee+del,cost,profit:sub+fee+del-cost-del}; }
+function genQuote(){const t=totals();const cus=document.getElementById('q_cus').value||'Customer';const dep=+document.getElementById('q_dep').value||100;
+let txt=`QUOTATION — ${cus}\n`;t.L.forEach(l=>txt+=`• ${l.p} x${l.q} @ ${fmt(l.s)} = ${fmt(l.q*l.s)} (cost ${fmt(l.c)})\n`);txt+=`Subtotal: ${fmt(t.sub)}\nService fee: ${fmt(t.fee)}\nDelivery: ${fmt(t.del)}\nTOTAL: ${fmt(t.total)}\nDeposit ${dep}%: ${fmt(Math.round(t.total*dep/100))}\nPayment: Wave/Orange Money before purchase. Prices valid 3 days.`;
+DB.lastQuote=txt;save();document.getElementById('q_out').textContent=txt;
+document.getElementById('q_wa').href='https://wa.me/?text='+encodeURIComponent(txt);return txt;}
+function copyQuote(){navigator.clipboard.writeText(document.getElementById('q_out').textContent);toast('Copied');}
+function copyText(id){navigator.clipboard.writeText(document.getElementById(id).textContent);toast('Copied');}
+function saveQuoteAsOrder(){const t=totals();const cus=document.getElementById('q_cus').value||'Walk-in';
+const id='Q-'+(1000+DB.orders.length+1);DB.orders.push({id,customer:cus,items:t.L,fee:t.fee,del:t.del,paid:0,status:'Quoted',ts:Date.now()});save();renderAll();toast('Saved '+id);}
+function addSupplier(){const name=v('s_name'),phone=v('s_phone'),product=v('s_prod'),price=+v('s_price')||0,terms=v('s_terms');if(!name||!product)return toast('Need name + product');DB.suppliers.push({name,phone,product,price,terms});save();renderAll();['s_name','s_phone','s_prod','s_price','s_terms'].forEach(i=>document.getElementById(i).value='');}
+function addCustomer(){const name=v('c_name');if(!name)return toast('Need name');DB.customers.push({name,type:v('c_type'),phone:v('c_phone'),loc:v('c_loc')});save();renderAll();document.getElementById('c_name').value='';}
+function addDelivery(){const o=v('d_order');if(!o)return toast('No order');DB.deliveries.push({order:o,rider:v('d_rider'),cost:+v('d_cost')||0,note:v('d_note')});const od=DB.orders.find(x=>x.id===o);if(od&&od.status==='Deposit paid')od.status='Purchased';save();renderAll();}
+const v=id=>document.getElementById(id).value.trim();
+function toast(m){const k=document.getElementById('kpis');if(k){const d=document.createElement('div');d.className='mut';d.textContent='✓ '+m;}}
+function renderAll(){renderKPI();renderOrders();renderSup();renderCus();renderDel();renderSetup();fillSelects();renderPhone();}
+function fillSelects(){const qc=document.getElementById('q_cus');qc.innerHTML=DB.customers.map(c=>`<option>${esc(c.name)}</option>`).join('');
+const qs=document.getElementById('q_sup');qs.innerHTML=DB.suppliers.map(s=>`<option>${esc(s.name+' — '+s.product+' '+s.price)}</option>`).join('');
+const do_=document.getElementById('d_order');do_.innerHTML=DB.orders.map(o=>`<option>${esc(o.id)} — ${esc(o.customer)}</option>`).join('').replaceAll(/ — .*"/g,'"');
+do_.innerHTML=DB.orders.map(o=>`<option value="${esc(o.id)}">${esc(o.id)} — ${esc(o.customer)}</option>`).join('');}
+function orderTotal(o){const sub=o.items.reduce((a,l)=>a+l.q*l.s,0);const t=sub+o.fee+o.del;const cost=o.items.reduce((a,l)=>a+l.q*l.c,0)+o.del;return{t,profit:t-cost};}
+function renderKPI(){let rev=0,prof=0,pend=0,paid=0;DB.orders.forEach(o=>{const{t,profit}=orderTotal(o);rev+=t;prof+=profit;paid+=o.paid;if(o.status!=='Paid'&&o.status!=='Cancelled')pend++;});
+document.getElementById('kpis').innerHTML=`<div class="kpi"><b>${DB.orders.length}</b><span>orders (goal 10)</span></div><div class="kpi"><b>${fmt(rev)}</b><span>quoted value</span></div><div class="kpi"><b>${fmt(prof)}</b><span>expected profit</span></div><div class="kpi"><b>${fmt(paid)}</b><span>cash collected</span></div>`;
+const acts=DB.orders.filter(o=>o.status!=='Paid'&&o.status!=='Cancelled').slice(0,5).map(o=>{const{t}=orderTotal(o);return `<div class="check"><span>⏳</span><div><b>${esc(o.id)} ${esc(o.customer)}</b> — ${esc(o.status)} — ${fmt(t)}<br/><span class="mut">Next: ${o.status==='Quoted'?'collect deposit':o.status==='Deposit paid'?'buy from supplier':o.status==='Purchased'?'deliver':'collect balance'}</span></div></div>`;}).join('')||'<p class="mut">No pending. Add a quote.</p>';
+document.getElementById('nextActions').innerHTML=acts;
+const cnt={};DB.orders.forEach(o=>o.items.forEach(l=>cnt[l.p]=(cnt[l.p]||0)+l.q));
+document.getElementById('topProducts').innerHTML=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([p,q])=>`<span class="badge"> ${esc(p)} ×${q}</span>`).join(' ')||'<span class="mut">No data yet</span>';}
+function renderOrders(){document.getElementById('o_body').innerHTML=DB.orders.filter(o=>!document.getElementById('f_status').value||o.status===document.getElementById('f_status').value).map((o,i)=>{const{t,profit}=orderTotal(o);
+return `<tr><td class="mono">${esc(o.id)}</td><td>${esc(o.customer)}</td><td>${o.items.map(l=>esc(l.p)+'×'+l.q).join('<br/>')}</td><td>${fmt(t)}</td><td>${fmt(o.paid)}<br/><button class="ghost small noprint" onclick="recPay(${DB.orders.indexOf(o)})">+ payment</button></td><td><span class="badge ${profit>0?'b-ok':'b-bad'}">${fmt(profit)}</span></td><td><select onchange="setSt(${DB.orders.indexOf(o)},this.value)">${['Quoted','Deposit paid','Purchased','Delivered','Paid','Cancelled'].map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select></td><td class="noprint"><button class="ghost small" onclick="delOrder(${DB.orders.indexOf(o)})">✕</button></td></tr>`;}).join('');}
+function setSt(i,s){DB.orders[i].status=s;if(s==='Paid'){const{t}=orderTotal(DB.orders[i]);DB.orders[i].paid=t;}save();renderAll();}
+function recPay(i){const a=prompt('Amount received GMD?', '');if(a==null)return;DB.orders[i].paid=(+DB.orders[i].paid||0)+(+a||0);const{t}=orderTotal(DB.orders[i]);if(DB.orders[i].paid>=t*.7&&DB.orders[i].status==='Quoted')DB.orders[i].status='Deposit paid';if(DB.orders[i].paid>=t)DB.orders[i].status='Paid';save();renderAll();}
+function delOrder(i){if(confirm('Delete?')){DB.orders.splice(i,1);save();renderAll();}}
+function renderSup(){document.getElementById('s_body').innerHTML=DB.suppliers.map((s,i)=>`<tr><td><b>${esc(s.name)}</b><br/><span class="mut">${esc(s.phone)}</span></td><td>${esc(s.product)}</td><td>${fmt(s.price)}</td><td>${esc(s.terms)}</td><td class="noprint"><button class="ghost small" onclick="DB.suppliers.splice(${i},1);save();renderAll()">✕</button></td></tr>`).join('');}
+function renderCus(){document.getElementById('c_body').innerHTML=DB.customers.map((c,i)=>`<tr><td>${esc(c.name)}</td><td>${esc(c.type)}</td><td>${esc(c.phone)}</td><td>${esc(c.loc)}</td><td class="noprint"><button class="ghost small" onclick="DB.customers.splice(${i},1);save();renderAll()">✕</button></td></tr>`).join('');}
+function renderDel(){document.getElementById('d_body').innerHTML=DB.deliveries.map((d,i)=>`<tr><td>${esc(d.order)}</td><td>${esc(d.rider)}</td><td>${fmt(d.cost)}</td><td>${esc(d.note)}</td><td class="noprint"><button class="ghost small" onclick="DB.deliveries.splice(${i},1);save();renderAll()">✕</button></td></tr>`).join('');}
+function renderSetup(){document.getElementById('setupList').innerHTML=SETUP.map((s,i)=>`<div class="check"><input type="checkbox" ${DB.checks[i]?'checked':''} onchange="DB.checks[${i}]=this.checked;save()"/><div><b>${esc(s[0])}</b><br/><span class="mut">${esc(s[1])}</span></div></div>`).join('');
+['b0','b1','b2','b3','b4','b5'].forEach((id,j)=>document.getElementById(id).value=DB.budget[j]||0);
+const sum=DB.budget.reduce((a,b)=>a+(+b||0),0);document.getElementById('b_sum').textContent=`Spent/planned: ${fmt(sum)} / GMD 5,000 — remaining ${fmt(5000-sum)}`;}
+function saveBudget(){DB.budget=['b0','b1','b2','b3','b4','b5'].map(id=>+document.getElementById(id).value||0);save();renderSetup();}
+function exportJSON(){const b=new Blob([JSON.stringify(DB)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='procurement-backup.json';a.click();}
+function importJSON(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{DB=JSON.parse(r.result);save();renderAll();};r.readAsText(f);}
+function exportCSV(){let c='id,customer,items,total,paid,profit,status\n';DB.orders.forEach(o=>{const{t,profit}=orderTotal(o);c+=`${o.id},"${o.customer}","${o.items.map(l=>l.p+'x'+l.q).join(';')}",${t},${o.paid},${profit},${o.status}\n`;});const b=new Blob([c],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='orders.csv';a.click();}
+function wipe(){if(confirm('Reset to demo?')){DB=seed();save();renderAll();}}
+// PHONE BRIDGE — MacroDroid cloud webhook
+function renderPhone(){if(!DB.phone)return;const p=DB.phone;const g=id=>document.getElementById(id);if(g('md_base'))g('md_base').value=p.base||'';if(g('md_to'))g('md_to').value=p.to||'';if(g('md_wa'))g('md_wa').value=p.wa||'wa_send';if(g('md_fo'))g('md_fo').value=p.fo||'followup';if(g('md_dl'))g('md_dl').value=p.dl||'delivery';}
+function savePhone(){DB.phone={base:document.getElementById('md_base').value.trim().replace(/\/*$/,'/'),to:document.getElementById('md_to').value.trim(),wa:document.getElementById('md_wa').value.trim()||'wa_send',fo:document.getElementById('md_fo').value.trim()||'followup',dl:document.getElementById('md_dl').value.trim()||'delivery'};save();mdLog('Saved: '+(DB.phone.base||'(paste base URL first)')+' + macros '+DB.phone.wa+'/'+DB.phone.fo+'/'+DB.phone.dl);}
+function mdLog(m){const el=document.getElementById('md_log');el.textContent=(el.textContent==='Phone log appears here…'?'':el.textContent+'\n')+'['+new Date().toLocaleTimeString()+'] '+m;el.scrollTop=9999;}
+async function mdFire(macro,params){let base=(DB.phone&&DB.phone.base||'').trim();if(!base){mdLog('ERROR: paste Webhook base URL first (MacroDroid → Webhook trigger → copy). Format https://trigger.macrodroid.com/[device-id]/');return false;}
+if(!base.endsWith('/'))base+='/';const url=base+encodeURIComponent(macro)+'?'+new URLSearchParams(params).toString();
+mdLog('GET '+url.slice(0,160)+(url.length>160?'…':''));
+try{await fetch(url,{mode:'no-cors'});mdLog('Sent → check phone notification / macro log. (no-cors = fire-and-forget, open URL in new tab to see confirmation)');return true;}
+catch(e){mdLog('Fetch failed, opening fallback… '+e);window.open(url,'_blank');return false;}}
+function mdTest(){mdFire(DB.phone.wa||'wa_send',{to:DB.phone.to||'2200000000',message:'Procurement OS test — MacroDroid connected ✅ '+new Date().toLocaleString()});}
+function mdSendQuote(){const q=DB.lastQuote||document.getElementById('q_out').textContent;if(!q){mdLog('Generate a quote first.');return;}const to=DB.phone.to||prompt('Customer WhatsApp number (220…)?','220');if(!to)return;mdFire(DB.phone.wa||'wa_send',{to,message:q.slice(0,3500)});}
+function mdSendFollowups(){agentFollow();const t=document.getElementById('a2').textContent;if(!t||t.includes('Nothing')){mdLog('No pending follow-ups.');return;}mdFire(DB.phone.fo||'followup',{to:DB.phone.to||'broadcast',message:t.slice(0,3500)});}
+// AGENTS
+function agentQuote(){if(!DB.suppliers.length)return document.getElementById('a1').textContent='Add suppliers first.';
+let t='QUOTE SUGGESTIONS (cost → sell, 12–15% + fee share):\n';DB.suppliers.slice(0,8).forEach(s=>{const r1=Math.round(s.price*1.12),r2=Math.round(s.price*1.15);t+=`• ${s.product} cost ${fmt(s.price)} → sell ${fmt(r1)}–${fmt(r2)} + fee\n`;});t+='\nRule: restaurant 12%, shop 15%. Always add GMD 100–200 service + delivery separately.';
+document.getElementById('a1').textContent=t;}
+function agentFollow(){const p=DB.orders.filter(o=>['Quoted','Deposit paid','Delivered','Purchased'].includes(o.status));if(!p.length)return document.getElementById('a2').textContent='Nothing pending. 🎉';
+let t='';p.forEach(o=>{const{t:tot}=orderTotal(o);const bal=tot-o.paid;
+if(o.status==='Quoted')t+=`To ${o.customer}: "Hello, your quotation ${o.id} (${fmt(tot)}) is ready. Deposit ${fmt(tot)} to confirm purchase. Valid 3 days. — [Your Biz]"\n\n`;
+else if(bal>0)t+=`To ${o.customer}: "Hello, update on ${o.id}: balance ${fmt(bal)} (${o.status}). Please send via Wave/Orange Money so we deliver today. — [Your Biz]"\n\n`;});
+document.getElementById('a2').textContent=t;}
+function agentPrice(){const g={};DB.suppliers.forEach(s=>{const k=s.product.toLowerCase().trim();(g[k]=g[k]||[]).push(s);});
+let t='CHEAPEST PER PRODUCT:\n';Object.entries(g).forEach(([k,v])=>{v.sort((a,b)=>a.price-b.price);t+=`• ${v[0].product}: ${fmt(v[0].price)} @ ${v[0].name} (${v.length} quotes)${v.length>1?` — save ${fmt(v[v.length-1].price-v[0].price)} vs highest`:''}\n`;});
+document.getElementById('a3').textContent=t||'Add supplier prices first.';}
+function agentReorder(){const cnt={};DB.orders.forEach(o=>o.items.forEach(l=>cnt[l.p]=(cnt[l.p]||0)+l.q));
+const s=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!s.length)return document.getElementById('a4').textContent='No sales yet. Sell pre-order first.';
+document.getElementById('a4').textContent='HOLD TEST STOCK ONLY FOR:\n'+s.slice(0,3).map(([p,q],i)=>`${i+1}. ${p} — sold ${q} units → keep 1–2 days cover from GMD 1,000 sample budget`).join('\n')+'\n\nDo NOT bulk-buy the rest. Pre-order only.';}
+function agentMarket(){const cnt={};DB.orders.forEach(o=>o.items.forEach(l=>cnt[l.p]=(cnt[l.p]||0)+l.q));
+const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const items=top.length?top:['Clean water cartons','Rice & oil bundles','Tissue & cleaning packs'];
+document.getElementById('a5').textContent=`STATUS 1: "Restaurants in Bakau/Kololi — we supply ${items[0]} + delivery today. Quote in 10 mins. Reply MENU."\nSTATUS 2: "Offices & shops: ${items.slice(0,2).join(' + ')} at wholesale + small service fee. 100% deposit, same-day sourcing."\nSTATUS 3: "Events & guesthouses: drinks, water, tissue, cleaning — one supplier, one delivery. Save transport."\nFLYER: "ONE CALL SUPPLY — Beverages • Water • Rice/Oil • Cleaning • Tissue. Deposit → We source → We deliver. [phone] "`;}
+load();addQLine('Bottled water carton',5,350,395);renderAll();genQuote();
+</script>
+</body>
+</html>
