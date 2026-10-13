@@ -42,6 +42,9 @@ footer{padding:24px;text-align:center;color:var(--mut);font-size:13px}
 <button data-t="cus">🏪 Customers</button>
 <button data-t="del">🛵 Deliveries</button>
 <button data-t="agents">🤖 AI Agents</button>
+<button data-t="research">🔎 Research</button>
+<button data-t="ops">👷 Ops Team</button>
+<button data-t="brain">🧠 Brain</button>
 <button data-t="phone">📲 Phone</button>
 <button data-t="setup">🧰 Setup & Capital</button>
 </nav>
@@ -157,6 +160,68 @@ footer{padding:24px;text-align:center;color:var(--mut);font-size:13px}
 </div>
 </section>
 
+<!-- RESEARCH -->
+<section id="v-research" hidden>
+<div class="card"><h2 style="margin:0">🔎 Research AI — clients, partners, wholesalers, competitors</h2>
+<p class="mut">Offline researcher. Add leads manually after market visits / Google / Facebook / referrals. AI scores them, builds search links, and drafts outreach. Examples are placeholders — verify on the ground.</p>
+<div class="grid g2">
+<div><label>Business name</label><input id="r_name" placeholder="e.g. Abuko Wholesalers"/></div>
+<div><label>Type</label><select id="r_type"><option>Client</option><option>Partner</option><option>Wholesaler</option><option>Distributor</option><option>Manufacturer</option><option>Competitor</option></select></div>
+</div>
+<div class="grid g2">
+<div><label>Location</label><input id="r_loc" placeholder="e.g. Serekunda Market"/></div>
+<div><label>Contact / phone</label><input id="r_phone" placeholder="220..."/></div>
+</div>
+<div class="grid g2">
+<div><label>Product / focus</label><input id="r_prod" placeholder="e.g. rice, oil, drinks"/></div>
+<div><label>Status</label><select id="r_status"><option>New</option><option>Contacted</option><option>Quoted</option><option>Active</option><option>Dead</option></select></div>
+</div>
+<label>Notes (prices, MOQ, delivery, terms)</label><input id="r_notes" placeholder="e.g. 50kg rice 2400, cash, delivers Bakau Tue/Fri"/>
+<div class="row" style="margin-top:10px"><button class="btn small" onclick="addResearch()">Add lead</button>
+<button class="ghost small" onclick="agentResearch()">🤖 Score + outreach plan</button>
+<button class="ghost small" onclick="researchSearchLinks()">🔗 Open web searches</button></div>
+<pre id="r_out">Research output appears here…</pre>
+<div style="overflow:auto"><table><thead><tr><th>Score</th><th>Name / type</th><th>Product / loc</th><th>Contact / status</th><th class="noprint"></th></tr></thead><tbody id="r_body"></tbody></table></div></div>
+</section>
+
+<!-- OPS -->
+<section id="v-ops" hidden>
+<div class="card"><h2 style="margin:0">👷 Ops AI Team — runs the business, keeps you informed</h2>
+<p class="mut">6 offline crew members read your live DB and produce tasks + briefing. Run Supervisor daily, send to your phone via Phone tab webhook.</p>
+<div class="grid g2">
+<div class="agent"><h3>🛒 Procurement Officer</h3><p class="mut">Cheapest supplier per product, what to buy today.</p><div class="row"><button class="btn small" onclick="opsProcure()">Run</button></div><pre id="o1">…</pre></div>
+<div class="agent"><h3>📲 Sales & Follow-up</h3><p class="mut">Pending deposits + balances, nudges ready.</p><div class="row"><button class="btn small" onclick="opsSales()">Run</button></div><pre id="o2">…</pre></div>
+<div class="agent"><h3>🛵 Delivery Coordinator</h3><p class="mut">Unassigned deliveries, rider plan.</p><div class="row"><button class="btn small" onclick="opsDelivery()">Run</button></div><pre id="o3">…</pre></div>
+<div class="agent"><h3>💰 Finance Guard</h3><p class="mut">Cash in, profit, risky credit, buffer check.</p><div class="row"><button class="btn small" onclick="opsFinance()">Run</button></div><pre id="o4">…</pre></div>
+<div class="agent"><h3>🔎 Market Researcher</h3><p class="mut">Top leads to contact next, gaps in supply.</p><div class="row"><button class="btn small" onclick="opsResearcher()">Run</button></div><pre id="o5">…</pre></div>
+<div class="agent"><h3>📣 Marketer</h3><p class="mut">Today's Status posts from top sellers.</p><div class="row"><button class="btn small" onclick="agentMarket();document.getElementById('o6').textContent=document.getElementById('a5').textContent">Run</button></div><pre id="o6">…</pre></div>
+</div>
+</div>
+<div class="card"><h3>🧑‍✈️ Supervisor — daily briefing</h3>
+<div class="row noprint"><button class="btn small" onclick="opsBrief()">Generate briefing</button><button class="ghost small" onclick="copyText('ops_out')">Copy</button><button class="ghost small" onclick="opsSendPhone()">Send to phone → WhatsApp</button></div>
+<pre id="ops_out">Briefing appears here…</pre>
+<h3>Today's tasks (auto + manual)</h3>
+<div class="row noprint"><input id="t_new" placeholder="Add task e.g. Visit 3 restaurants in Bakau" style="flex:1"/><button class="btn small" onclick="addTask()">Add</button><button class="ghost small" onclick="autoTasks()">Auto-build from DB</button></div>
+<div id="t_list"></div></div>
+</section>
+
+<!-- BRAIN -->
+<section id="v-brain" hidden>
+<div class="card"><h2 style="margin:0">🧠 Self-improving Brain — shared by AI + humans</h2>
+<p class="mut">Every order, payment, and lesson retrains the crew. Version <span id="br_ver" class="mono"></span> • <span id="br_stat" class="mut"></span></p>
+<div class="grid g2">
+<div><h3>Supplier reliability (auto)</h3><div id="br_sup"></div></div>
+<div><h3>Customer value (auto)</h3><div id="br_cus"></div></div>
+</div>
+<h3>Lessons learned — humans + AI write here</h3>
+<div class="grid g2"><div><label>Lesson (what happened → what to do)</label><input id="l_txt" placeholder="e.g. Late delivery → always confirm rider night before"/></div><div><label>Tag</label><select id="l_tag"><option>pricing</option><option>supplier</option><option>delivery</option><option>customer</option><option>cash</option><option>other</option></select></div></div>
+<div class="row"><button class="btn small" onclick="addLesson()">Save lesson → retrain</button><button class="ghost small" onclick="relearn()">↻ Retrain now</button></div>
+<div id="l_list"></div>
+<h3>Human counterparts — SOP + handover</h3>
+<div class="row noprint"><button class="ghost small" onclick="brainSOP()">Generate SOP</button><button class="ghost small" onclick="copyText('br_sop')">Copy SOP</button><button class="ghost small" onclick="exportJSON()">⬇ Full brain backup</button><button class="ghost small" onclick="window.print()">Print handover</button></div>
+<pre id="br_sop">SOP appears here…</pre></div>
+</section>
+
 <!-- SETUP -->
 <section id="v-setup" hidden>
 <div class="card"><h2 style="margin:0">🧰 Services & tools to start (lean)</h2>
@@ -186,13 +251,16 @@ let DB=null;
 function seed(){return {customers:[{name:'Demo Juice Bar',type:'Juice bar',phone:'2203000001',loc:'Bakau'},{name:'Demo Guesthouse',type:'Guesthouse/Hotel',phone:'2203000002',loc:'Kololi'}],
 suppliers:[{name:'Kanifing Wholesalers',phone:'2204000001',product:'Bottled water carton',price:350,terms:'Cash, delivery available'},{name:'Serrekunda Foods',phone:'2204000002',product:'Rice 50kg',price:2450,terms:'Cash'},{name:'Bakau Cleaning Supply',phone:'2204000003',product:'Tissue box (12)',price:420,terms:'7-day credit after 3 cash orders'}],
 orders:[{id:'Q-1001',customer:'Demo Juice Bar',items:[{p:'Bottled water carton',q:5,c:350,s:395}],fee:150,del:100,paid:0,status:'Quoted',ts:Date.now()}],
-deliveries:[],checks:Array(SETUP.length).fill(false),budget:[500,1000,1000,500,1000,1000],lastQuote:'',phone:{base:'',to:'',wa:'wa_send',fo:'followup',dl:'delivery'}};}
-function load(){try{DB=JSON.parse(localStorage.getItem(K))||seed();}catch{DB=seed();} if(!DB.budget)DB.budget=[500,1000,1000,500,1000,1000]; if(!DB.phone)DB.phone={base:'',to:'',wa:'wa_send',fo:'followup',dl:'delivery'}; save();}
+deliveries:[],checks:Array(SETUP.length).fill(false),budget:[500,1000,1000,500,1000,1000],lastQuote:'',phone:{base:'',to:'',wa:'wa_send',fo:'followup',dl:'delivery'},
+research:[{name:'Example: Serekunda Central Wholesalers',type:'Wholesaler',loc:'Serekunda',phone:'',product:'rice, oil, sugar',status:'New',notes:'EXAMPLE — verify price/MOQ on visit'}],
+lessons:[{txt:'Always collect 70-100% deposit before buying — no credit to new customers',tag:'cash',ts:Date.now()}],
+tasks:[],briefs:[],brainVer:1};}
+function load(){try{DB=JSON.parse(localStorage.getItem(K))||seed();}catch{DB=seed();} if(!DB.budget)DB.budget=[500,1000,1000,500,1000,1000]; if(!DB.phone)DB.phone={base:'',to:'',wa:'wa_send',fo:'followup',dl:'delivery'}; if(!DB.research)DB.research=[]; if(!DB.lessons)DB.lessons=[]; if(!DB.tasks)DB.tasks=[]; if(!DB.briefs)DB.briefs=[]; if(!DB.brainVer)DB.brainVer=1; save();}
 function save(){localStorage.setItem(K,JSON.stringify(DB));}
 const fmt=n=>'GMD '+Number(n||0).toLocaleString();
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 // tabs
-document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');['dash','quote','orders','sup','cus','del','agents','phone','setup'].forEach(t=>document.getElementById('v-'+t).hidden=(t!==b.dataset.t));});
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');['dash','quote','orders','sup','cus','del','agents','research','ops','brain','phone','setup'].forEach(t=>document.getElementById('v-'+t).hidden=(t!==b.dataset.t));});
 // quote lines
 function addQLine(p='',q=1,c=0,s=0){const d=document.createElement('div');d.className='grid g2 qline';d.style.border='1px solid #e2e8f0';d.style.borderRadius='10px';d.style.padding='8px';d.style.margin='8px 0';
 d.innerHTML=`<div><label>Product</label><input class="qp" value="${esc(p)}" placeholder="e.g. Rice 50kg"/></div><div class="grid g2" style="grid-template-columns:1fr 1fr 1fr"><div><label>Qty</label><input class="qq" type="number" value="${q}"/></div><div><label>Cost</label><input class="qc" type="number" value="${c}"/></div><div><label>Sell</label><input class="qs" type="number" value="${s}"/></div></div>`;
@@ -213,7 +281,7 @@ function addCustomer(){const name=v('c_name');if(!name)return toast('Need name')
 function addDelivery(){const o=v('d_order');if(!o)return toast('No order');DB.deliveries.push({order:o,rider:v('d_rider'),cost:+v('d_cost')||0,note:v('d_note')});const od=DB.orders.find(x=>x.id===o);if(od&&od.status==='Deposit paid')od.status='Purchased';save();renderAll();}
 const v=id=>document.getElementById(id).value.trim();
 function toast(m){const k=document.getElementById('kpis');if(k){const d=document.createElement('div');d.className='mut';d.textContent='✓ '+m;}}
-function renderAll(){renderKPI();renderOrders();renderSup();renderCus();renderDel();renderSetup();fillSelects();renderPhone();}
+function renderAll(){renderKPI();renderOrders();renderSup();renderCus();renderDel();renderSetup();fillSelects();renderPhone();renderResearch();renderTasks();renderBrain();}
 function fillSelects(){const qc=document.getElementById('q_cus');qc.innerHTML=DB.customers.map(c=>`<option>${esc(c.name)}</option>`).join('');
 const qs=document.getElementById('q_sup');qs.innerHTML=DB.suppliers.map(s=>`<option>${esc(s.name+' — '+s.product+' '+s.price)}</option>`).join('');
 const do_=document.getElementById('d_order');do_.innerHTML=DB.orders.map(o=>`<option>${esc(o.id)} — ${esc(o.customer)}</option>`).join('').replaceAll(/ — .*"/g,'"');
@@ -271,7 +339,65 @@ document.getElementById('a4').textContent='HOLD TEST STOCK ONLY FOR:\n'+s.slice(
 function agentMarket(){const cnt={};DB.orders.forEach(o=>o.items.forEach(l=>cnt[l.p]=(cnt[l.p]||0)+l.q));
 const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,3).map(x=>x[0]);const items=top.length?top:['Clean water cartons','Rice & oil bundles','Tissue & cleaning packs'];
 document.getElementById('a5').textContent=`STATUS 1: "Restaurants in Bakau/Kololi — we supply ${items[0]} + delivery today. Quote in 10 mins. Reply MENU."\nSTATUS 2: "Offices & shops: ${items.slice(0,2).join(' + ')} at wholesale + small service fee. 100% deposit, same-day sourcing."\nSTATUS 3: "Events & guesthouses: drinks, water, tissue, cleaning — one supplier, one delivery. Save transport."\nFLYER: "ONE CALL SUPPLY — Beverages • Water • Rice/Oil • Cleaning • Tissue. Deposit → We source → We deliver. [phone] "`;}
-load();addQLine('Bottled water carton',5,350,395);renderAll();genQuote();
+// RESEARCH AI
+function leadScore(r){let s=50;if(r.phone)s+=15;if(r.notes&&r.notes.length>8)s+=15;if(/cash|deliver|credit/i.test(r.notes||''))s+=5;if(r.type==='Client'||r.type==='Wholesaler')s+=5;if(r.status==='Active')s+=10;if(r.status==='Dead')s-=40;if(/example/i.test(r.name||''))s-=20;return Math.max(5,Math.min(99,s));}
+function addResearch(){const name=v('r_name');if(!name)return toast('Need name');DB.research.push({name,type:v('r_type'),loc:v('r_loc'),phone:v('r_phone'),product:v('r_prod'),status:v('r_status'),notes:v('r_notes')});save();renderResearch();relearn(true);['r_name','r_loc','r_phone','r_prod','r_notes'].forEach(i=>document.getElementById(i).value='');}
+function renderResearch(){const el=document.getElementById('r_body');if(!el)return;el.innerHTML=[...DB.research].sort((a,b)=>leadScore(b)-leadScore(a)).map(r=>{const i=DB.research.indexOf(r);const s=leadScore(r);return `<tr><td><span class="badge ${s>70?'b-ok':s>45?'b-warn':'b-bad'}">${s}</span></td><td><b>${esc(r.name)}</b><br/><span class="mut">${esc(r.type)}</span></td><td>${esc(r.product)}<br/><span class="mut">${esc(r.loc)}</span></td><td>${esc(r.phone)}<br/><select onchange="DB.research[${i}].status=this.value;save();renderResearch()" class="noprint">${['New','Contacted','Quoted','Active','Dead'].map(x=>`<option ${x===r.status?'selected':''}>${x}</option>`).join('')}</select></td><td class="noprint"><button class="ghost small" onclick="DB.research.splice(${i},1);save();renderResearch()">✕</button></td></tr>`;}).join('')||'<tr><td colspan=5>No leads yet</td></tr>';}
+function agentResearch(){if(!DB.research.length)return document.getElementById('r_out').textContent='Add 5+ leads first (visit market, ask referrals).';
+const top=[...DB.research].sort((a,b)=>leadScore(b)-leadScore(a)).slice(0,5);
+let t='TOP 5 TO CONTACT (scored on contact info + terms + status):\n';top.forEach((r,i)=>{t+=`${i+1}. [${leadScore(r)}] ${r.name} (${r.type}, ${r.loc}) — ${r.product}. ${r.phone||'no phone! get it'}. Terms: ${r.notes||'unknown — ask MOQ/price/delivery'}\n`;});
+const gaps=[...new Set(DB.research.filter(r=>r.type==='Competitor').map(r=>r.product))];
+t+=`\nOUTREACH (copy → WhatsApp):\n"Hello ${top[0].name}, I supply restaurants/offices in ${top[0].loc||'Greater Banjul'} with ${top[0].product||'daily goods'}. Can I get your wholesale price list + MOQ + delivery days? — [Your Biz]"\n`;
+t+=`\nCOMPETITOR WATCH: ${gaps.length?gaps.join('; '):'log 2-3 competitors with prices to undercut on service, not price war'}. Win on: deposit terms, 10-min quotes, one-delivery bundles.\nNEXT: convert top New → Contacted → Quoted this week.`;
+document.getElementById('r_out').textContent=t;}
+function researchSearchLinks(){const q=prompt('Search what? e.g. rice wholesaler Serekunda','wholesaler Serekunda Gambia');if(!q)return;['https://duckduckgo.com/?q=','https://www.google.com/search?q=','https://www.facebook.com/search/top?q='].forEach(u=>window.open(u+encodeURIComponent(q),'_blank'));}
+// OPS TEAM
+function opsProcure(){const g={};DB.suppliers.forEach(s=>{(g[s.product]=g[s.product]||[]).push(s);});
+let t='BUY LIST TODAY:\n';const need=DB.orders.filter(o=>['Deposit paid','Quoted'].includes(o.status));
+if(!need.length)t+='No paid orders waiting. Do NOT buy stock. Sell first.\n';
+need.slice(0,5).forEach(o=>{o.items.forEach(l=>{const opts=(g[l.p]||[]).sort((a,b)=>a.price-b.price);t+=`• ${o.id}: ${l.p} x${l.q} → ${opts.length?opts[0].name+' @ '+fmt(opts[0].price):'NO SUPPLIER — source now!'}\n`;});});
+t+='\nRule: buy ONLY after deposit. Cheapest verified supplier wins.';document.getElementById('o1').textContent=t;}
+function opsSales(){agentFollow();document.getElementById('o2').textContent=document.getElementById('a2').textContent;}
+function opsDelivery(){const un=DB.orders.filter(o=>['Deposit paid','Purchased'].includes(o.status));const asg=new Set(DB.deliveries.map(d=>d.order));
+let t='DELIVERY BOARD:\n';if(!un.length)t+='Nothing to deliver. 🎉\n';
+un.forEach(o=>{t+=`• ${o.id} ${o.customer} — ${asg.has(o.id)?'rider assigned ✓':'⚠ NO RIDER — assign in Deliveries tab'}\n`;});
+t+='\nRiders: '+(DB.deliveries.length?DB.deliveries.slice(-3).map(d=>d.rider+' ('+fmt(d.cost)+')').join(', '):'add 3 rider contacts first');document.getElementById('o3').textContent=t;}
+function opsFinance(){let rev=0,prof=0,paid=0,owed=0;DB.orders.forEach(o=>{const{t:p,profit}=orderTotal(o);rev+=p;prof+=profit;paid+=o.paid;owed+=p-o.paid;});
+const spent=DB.budget.reduce((a,b)=>a+(+b||0),0);
+document.getElementById('o4').textContent=`CASH TODAY:\nQuoted: ${fmt(rev)}\nCollected: ${fmt(paid)}\nOwed by customers: ${fmt(owed)} ${owed>5000?'⚠ STOP credit — collect first!':''}\nExpected profit: ${fmt(prof)}\nLaunch spend: ${fmt(spent)}/5000\nRule: if owed > 5000, no new credit. Deposits only.`;}
+function opsResearcher(){const top=[...DB.research].sort((a,b)=>leadScore(b)-leadScore(a)).slice(0,3);
+document.getElementById('o5').textContent=top.length?('CONTACT NEXT:\n'+top.map((r,i)=>`${i+1}. ${r.name} (${r.type}) ${r.phone||'— get phone'} — ${r.product}`).join('\n')+'\n\nGoal: 5 visits/calls per day, log price+MOQ.'):'Research empty — add 5 leads in Research tab.';}
+function autoTasks(){const ts=[];DB.orders.filter(o=>o.status==='Quoted').forEach(o=>ts.push('Collect deposit: '+o.id+' '+o.customer));
+DB.orders.filter(o=>o.status==='Deposit paid').forEach(o=>ts.push('Buy + deliver: '+o.id));
+DB.deliveries.forEach(d=>{});
+[...DB.research].sort((a,b)=>leadScore(b)-leadScore(a)).slice(0,3).forEach(r=>{if(r.status==='New')ts.push('Visit/call: '+r.name);});
+if(!ts.length)ts.push('Get 3 new quotes from restaurants/shops today');
+DB.tasks=ts.map(t=>({t,done:false}));save();renderTasks();}
+function addTask(){const x=document.getElementById('t_new').value.trim();if(!x)return;DB.tasks.push({t:x,done:false});document.getElementById('t_new').value='';save();renderTasks();}
+function renderTasks(){const el=document.getElementById('t_list');if(!el)return;el.innerHTML=DB.tasks.map((t,i)=>`<div class="check"><input type="checkbox" ${t.done?'checked':''} onchange="DB.tasks[${i}].done=this.checked;save();relearn(true)"/><div class="${t.done?'mut':''}" style="${t.done?'text-decoration:line-through':''}">${esc(t.t)}</div><button class="ghost small noprint" onclick="DB.tasks.splice(${i},1);save();renderTasks()">✕</button></div>`).join('')||'<p class="mut">No tasks. Click Auto-build.</p>';}
+function opsBrief(){opsProcure();opsSales();opsDelivery();opsFinance();opsResearcher();
+const d=new Date().toLocaleDateString();let rev=0,prof=0,paid=0;DB.orders.forEach(o=>{const r=orderTotal(o);rev+=r.t;prof+=r.profit;paid+=o.paid;});
+const open=DB.tasks.filter(t=>!t.done).length;
+const t=`DAILY BRIEF — ${d}\nOrders: ${DB.orders.length} | Quoted ${fmt(rev)} | Collected ${fmt(paid)} | Profit ${fmt(prof)}\nOpen tasks: ${open} | Leads: ${DB.research.length} | Lessons: ${DB.lessons.length} (Brain v${DB.brainVer})\n\n1) PROCURE: ${document.getElementById('o1').textContent.split('\n').slice(1,3).join(' / ')}\n2) SALES: ${DB.orders.filter(o=>o.status==='Quoted').length} quotes await deposit\n3) DELIVER: ${DB.orders.filter(o=>['Deposit paid','Purchased'].includes(o.status)).length} to deliver\n4) CASH: owed ${fmt(rev-paid)} — ${rev-paid>0?'collect before new buys':'clean'}\n5) NEXT LEAD: ${DB.research.length?[...DB.research].sort((a,b)=>leadScore(b)-leadScore(a))[0].name:'add leads'}\n\nTop lesson: ${DB.lessons.length?DB.lessons[DB.lessons.length-1].txt:'collect deposit first'}`;
+document.getElementById('ops_out').textContent=t;DB.briefs.unshift({d,t});DB.briefs=DB.briefs.slice(0,20);save();}
+function opsSendPhone(){const t=document.getElementById('ops_out').textContent;if(!t||t.includes('appears'))return mdLog('Generate briefing first.');mdFire((DB.phone&&DB.phone.fo)||'followup',{to:(DB.phone&&DB.phone.to)||'me',message:t.slice(0,3500)});}
+// BRAIN — self-improving
+function relearn(silent){const sc={};DB.suppliers.forEach(s=>{sc[s.name]=sc[s.name]||{n:0,profit:0};});
+DB.orders.forEach(o=>{o.items.forEach(l=>{const m=DB.suppliers.find(s=>s.product===l.p);if(m){sc[m.name].n++;sc[m.name].profit+=(l.s-l.c)*l.q;}});});
+DB._supScore=sc;
+const done=DB.tasks.filter(t=>t.done).length;
+if(!silent){DB.brainVer++;save();}
+renderBrain();}
+function renderBrain(){const ve=document.getElementById('br_ver');if(!ve)return;ve.textContent='v'+DB.brainVer;
+document.getElementById('br_stat').textContent=`${DB.orders.length} orders • ${DB.research.length} leads • ${DB.lessons.length} lessons • ${DB.tasks.filter(t=>t.done).length}/${DB.tasks.length} tasks done`;
+const sc=DB._supScore||{};document.getElementById('br_sup').innerHTML=Object.entries(sc).map(([k,vv])=>`<div class="check"><span>${vv.n>2?'🏆':vv.n>0?'✅':'➖'}</span><div><b>${esc(k)}</b> — ${vv.n} orders, ${fmt(vv.profit)} margin<br/><span class="mut">${vv.n>2?'Preferred — use first':vv.n>0?'Proven — reuse':'Untested — cash only'}</span></div></div>`).join('')||'<p class="mut">No supplier history yet.</p>';
+const cv={};DB.orders.forEach(o=>{cv[o.customer]=cv[o.customer]||{n:0,paid:0,tot:0};const r=orderTotal(o);cv[o.customer].n++;cv[o.customer].paid+=o.paid;cv[o.customer].tot+=r.t;});
+document.getElementById('br_cus').innerHTML=Object.entries(cv).sort((a,b)=>b[1].tot-a[1].tot).slice(0,6).map(([k,vv])=>`<div class="check"><span>💼</span><div><b>${esc(k)}</b> — ${vv.n} orders, paid ${fmt(vv.paid)}/${fmt(vv.tot)}<br/><span class="mut">${vv.paid>=vv.tot?'Reliable payer':vv.paid>=vv.tot*.7?'OK — deposits':'⚠ Slow payer — 100% upfront'}</span></div></div>`).join('')||'<p class="mut">No customer history yet.</p>';
+document.getElementById('l_list').innerHTML=[...DB.lessons].reverse().map(l=>{const i=DB.lessons.indexOf(l);return `<div class="check"><span class="badge">${esc(l.tag)}</span><div>${esc(l.txt)}<br/><span class="mut">${new Date(l.ts).toLocaleDateString()}</span></div><button class="ghost small noprint" onclick="DB.lessons.splice(${i},1);save();renderBrain()">✕</button></div>`;}).join('');}
+function addLesson(){const t=document.getElementById('l_txt').value.trim();if(!t)return;DB.lessons.push({txt:t,tag:document.getElementById('l_tag').value,ts:Date.now()});DB.brainVer++;document.getElementById('l_txt').value='';save();renderBrain();toast('Brain v'+DB.brainVer);}
+function brainSOP(){const cv={};DB.orders.forEach(o=>{cv[o.customer]=cv[o.customer]||0;cv[o.customer]++;});
+document.getElementById('br_sop').textContent=`STANDARD OPERATING PROCEDURE — Brain v${DB.brainVer} (${new Date().toLocaleDateString()})\n1. QUOTE in 10 min: cost + 12-15% + GMD 100-200 fee + delivery. 100% deposit new clients.\n2. BUY only after deposit. Cheapest verified supplier first.\n3. DELIVER same day via rider/taxi. Confirm night before.\n4. COLLECT balance on delivery. No credit over GMD 5,000 owed.\n5. LOG every order + lesson here. Top lesson: ${DB.lessons.length?DB.lessons[DB.lessons.length-1].txt:'—'}\n6. RESEARCH: 5 visits/calls/day. Score leads, Contacted→Quoted→Active.\n7. BACKUP weekly: Export JSON, share with partner. Humans: ${DB.customers.length} customers, ${DB.suppliers.length} suppliers, ${DB.research.length} leads in system.`;}
+load();addQLine('Bottled water carton',5,350,395);renderAll();genQuote();relearn(true);
 </script>
 </body>
 </html>
